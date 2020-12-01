@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200;0,300;0,400;1,200;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" type= "text/css" href="Foundation-Sites-6.6.3-CSS/assets/css/foundation.css">
+<link rel="stylesheet" type= "text/css" href="app.css">
+<link rel="stylesheet" type= "text/css" href="test.css">
+<link rel="stylesheet" type= "text/css" href="dropdown-Style.css">
+<link rel="stylesheet" type= "text/css" href="slider.css">
+<link rel="stylesheet" type= "text/css" href="button.css">
+<body>
+  <ul class="dropList">
+    <li class="dropdown">
+      <a class="dropbtn" href="">Wildcat S&S</a>
+    </li>
+    <li class="dropdown">
+      <a class="dropbtn">Sorts</a>
+      <div class="dropdown-content">
+        <a href="bubble.html">Bubble Sort</a>
+        <a href="selection.html">Selection Sort</a>
+        <a href="quick.html">Quick Sort</a>
+      </div>
+    </li>
+    <li class="dropdown">
+      <a class="dropbtn">Searches</a>
+      <div class="dropdown-content">
+        <a href="dijkstra.html" >Dikjstra's</a>
+      </div>
+    </li>
+  </ul>
+<div class="grid-container">
+  <div class="grid-x grid-padding-x">
+    <div class="large-4 medium-4 cell">
+      <div class="card-info primary">
+
+      </div>
+      <div class="large-4 medium-4 small-1 cell">
+<button type="button" class="button expanded" name="button" onclick="dijkstra()">Dijkstra's Algorithm</button>
+      </div>
+      <div class="slidecontainer">
+
+      </div>
+
+    </div>
+    <div class="large-8 medium-8 cell">
+      <div class="card-info primary " id ="gridBin">
+        <div class="card-info-content flex-wrap" id = "gridCell">
+
+        </div>
+      </div>
+      <div class="card-info primary" id ="explainationBin">
+        <div class="card-info-content" id = "explainationCell">
+          <p id = "explainationParagraph" class = "firstLine">This panel will explain what is being executed as the algorithm runs!</p>
+        </div>
+        <div class="card-info-content" id = "setCell">
+          <p id = "setParagraph" class = "firstLine">This panel will explain what flags or variable are being set!</p>
+        </div>
+        <div class="card-info-content" id = "sortedCell">
+          <p id = "sortedParagraph" class = "firstLine">This panel will announce when variables are sorted!</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+    <script src="dijkstra.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Foundation-Sites-6.6.3-CSS/assets/js/vendor.js"></script>
+    <script type="text/javascript" src="Foundation-Sites-6.6.3-CSS/assets/js/foundation.js"></script>
+
+
+    <!-- <button type="button" name="button" onclick="BubbleSort_FullCycle()">FullCycle</button> -->
+  </body>
+</html>

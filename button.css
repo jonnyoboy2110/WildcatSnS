@@ -1,0 +1,6 @@
+.button{
+  background-color: #8c231e;
+}
+.button:hover {
+  background-color : #3c6e71; /* Fully shown on mouse-over */
+}

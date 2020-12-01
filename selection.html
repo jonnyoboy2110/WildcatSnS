@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200;0,300;0,400;1,200;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" type= "text/css" href="Foundation-Sites-6.6.3-CSS/assets/css/foundation.css">
+<link rel="stylesheet" type= "text/css" href="app.css">
+<link rel="stylesheet" type= "text/css" href="dropdown-Style.css">
+<link rel="stylesheet" type= "text/css" href="slider.css">
+<link rel="stylesheet" type= "text/css" href="button.css">
+<body>
+  <ul class="dropList">
+    <li class="dropdown">
+      <a class="dropbtn" href="">Wildcat S&S</a>
+    </li>
+    <li class="dropdown">
+      <a class="dropbtn">Sorts</a>
+      <div class="dropdown-content">
+        <a href="bubble.html">Bubble Sort</a>
+        <a href="selection.html">Selection Sort</a>
+        <a href="quick.html">Quick Sort</a>
+      </div>
+    </li>
+    <li class="dropdown">
+      <a class="dropbtn">Searches</a>
+      <div class="dropdown-content">
+        <a href="dijkstra.html" >Dikjstra's</a>
+      </div>
+    </li>
+  </ul>
+<div class="grid-container">
+  <div class="grid-x grid-padding-x">
+    <div class="large-4 medium-4 cell">
+      <div class="card-info primary">
+        <div class="card-info-content" id = "SortCode">
+         <p id = "code1" class="firstLine">SelectionSort(arr,n){ </p>
+         <tab><p id = "code2"> int min_index;</p>
+           <p id = "code3">for(int i = 0; i < n-1; i++){</p>
+             <tab><p id = "code4">min_index = i;</p><br>
+             <p id = "code5">for(int j = i+1; j < n; j++){</p>
+               <tab><p id = "code6">if(arr[j] < arr[min_index]){ </p>
+                 <tab><p id = "code7"> min_index = j;</p>
+                 <p id = "code8">}</p>
+               <untab><p id = "code9">} </p>
+             <untab><p id = "code10">swap(arr[i], arr[min_index])</p>
+             <untab><p id = "code11">}</p>
+           <untab><p id = "code12">}</p>
+          <untab><p id = "code13"></p>
+        </div>
+      </div>
+      <div class="large-4 medium-4 small-1 cell">
+
+        <button type="button" class="button expanded" name="button" onclick="SelectionSort()">Selection Sort</button>
+        <button id = "StopAndGoButton"type="button" class="button expanded" name="Pause button", onclick="pauseDraw()">Pause Draw</button>
+        <button id = "RandomValueButton "type="button" class="button expanded" name="Random Button", onclick="resetLines(-1)">Random Values</button>
+
+      </div>
+      <div class="slidecontainer">
+        <span id= "speedText">Speed = 1</span>
+        <input type="range" class = "slider" id="speedSlider" min="1" max="10" value="1" onchange="changeSpeed()" ></input><br>
+        <span id= "sizeText">Size = 1</span>
+        <input type="range" class = "slider" id="sizeSlider" min="1" max="100" value="10" onchange="changeSize()" ></input>
+      </div>
+      <input id = "testValues" type="text" name="valuesInputs" onkeydown="updateArraySize(this)" value="" placeholder="Ex -> 12 63 95 87 15 111 59 36 99 365 41 59 123"></input>
+    </div>
+    <div class="large-8 medium-8 cell">
+      <div class="card-info primary" id ="canvasBin">
+        <div class="card-info-content" id = "canvasCell">
+          <canvas id="canvas" ></canvas>
+        </div>
+      </div>
+      <div class="card-info primary" id ="explainationBin">
+        <div class="card-info-content" id = "explainationCell">
+          <p id = "explainationParagraph" class = "firstLine">This panel will explain what is being executed as the algorithm runs!</p>
+        </div>
+        <div class="card-info-content" id = "setCell">
+          <p id = "setParagraph" class = "firstLine">This panel will explain what flags or variable are being set!</p>
+        </div>
+        <div class="card-info-content" id = "sortedCell">
+          <p id = "sortedParagraph" class = "firstLine">This panel will announce when variables are sorted!</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+    <script src="sort.js" charset="utf-8"></script>
+    <script src="selection.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Foundation-Sites-6.6.3-CSS/assets/js/vendor.js"></script>
+    <script type="text/javascript" src="Foundation-Sites-6.6.3-CSS/assets/js/foundation.js"></script>
+  </body>
+</html>

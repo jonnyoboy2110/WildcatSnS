@@ -1,0 +1,27 @@
+.flex-container {
+  /* In order to use flex-box we need to first set our display property */
+  display: flex;
+  /* center the container horizontally */
+  justify-content: center;
+  /* this will center content vertically */
+  align-items: center;
+  /* tells the container to align the children in columns rather than rows */
+  }
+  .flex-column {
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  }
+  .flex-wrap {
+  /* tells the container to drop down once it reaches max-width */
+  align-content: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+
+  }
+  .square {
+  border: 2px solid rgba(0, 0, 0, .75);
+  transition-property: background-color;
+  transition-duration: .5s;
+
+  }
