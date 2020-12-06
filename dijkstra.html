@@ -35,7 +35,15 @@
   <div class="grid-x grid-padding-x">
     <div class="large-4 medium-4 cell">
       <div class="card-info primary">
-
+        <p class = "firstLine">Color Legend</p>
+        <ul>
+          <li > <span style="background-color: red;" > Start Point</span></li>
+          <li ><span style="background-color:green" >End Point</span></li>
+          <li ><span style="background-color:purple">Wall</span></li>
+          <li ><span style="background-color:yellow" >Path</span></li>
+          <li ><span style="background-color:blue" >Visited Node</span></li>
+          <li ><span style="background-color:pink">Node Fully Checked</span></li>
+        </ul>
       </div>
       <div class="large-4 medium-4 small-1 cell">
         <button type="button" class="button expanded" name="button" onclick="dijkstra()">Dijkstra's Algorithm</button><br>
@@ -56,7 +64,7 @@
         <div class="card-info-content card-info primary flex-wrap" id = "gridCell">
 
       </div>
-      <div class="card-info primary" id ="explainationBin">
+      <!-- <div class="card-info primary" id ="explainationBin">
         <div class="card-info-content" id = "explainationCell">
           <p id = "explainationParagraph" class = "firstLine">This panel will explain what is being executed as the algorithm runs!</p>
         </div>
@@ -66,7 +74,7 @@
         <div class="card-info-content" id = "sortedCell">
           <p id = "sortedParagraph" class = "firstLine">This panel will announce when variables are sorted!</p>
         </div>
-      </div>
+      </div> -->
     </div>
 
   </div>
