@@ -3,6 +3,7 @@ function Node(row,col){
   this.row = row;
   this.isVisited = false;
   this.isDone =  false;
+  this.isWall = false;
   this.start =  false;
   this.finish = false;
   this.dist = -1;
@@ -12,50 +13,41 @@ function Node(row,col){
 }
 var canvas = document.getElementById("gridCell");
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
-document.getElementById("gridCell").style.width = document.getElementById("gridBin").style.width;
+//document.getElementById("gridCell").style.width = document.getElementById("gridBin").style.width;
 canvas.style.flexWrap = "wrap";
-document.getElementById("gridBin").style.height = (window.innerHeight - 80) + "px";
+//document.getElementById("gridBin").style.height = (window.innerHeight - 80) + "px";
 document.getElementById("gridCell").style.height = (window.innerHeight - 100) + "px";
-var canWidth = document.getElementById("gridCell").offsetWidth - 25;
+var canWidth = document.getElementById("gridCell").offsetWidth;
 var canHeight = document.getElementById("gridCell").offsetHeight;
 canvas.width = canWidth;
 canvas.height = canHeight;
-var nodeSize = 50;
+var nodeSize = 25;
 var grid = [];
-for (let row = 0; row < (canvas.height-nodeSize)/nodeSize; row++) {
 
-  grid.push([]);
-  for (let col = 0; col < (canvas.width - nodeSize)/nodeSize; col++) {
-    grid[row].push(new Node(row,col))
-  }
-}
+var directions = [];
+var path = []
 
-for (let row = 0; row < grid.length; row++) {
-  for (let col = 0; col < grid[0].length; col++) {
-    let div = document.createElement("div");
-    div.style.width = nodeSize + "px";
-    div.style.height = nodeSize + "px";
-    div.style.background = "white";
-    div.style.border = "2px solid black"
-    div.style.color = "white";
-    div.className = "square";
-    div.id = "[" + row + "," + col + "]";
-    document.getElementById("gridCell").appendChild(div);
-  }
-}
-
-//Start node
 var startNodeRow;
 var startNodeCol;
 var startNodeId;
+var endNodeRow;
+var endNodeCol;
+var endNodeId;
+
+
+//Chosing grid dimesions based on page size
+
+document.getElementById('rowSlider').value = 10;
+document.getElementById('rowLabel').innerHTML ="Rows = " + 10;
+
+document.getElementById('colSlider').value = 10;
+document.getElementById('colLabel').innerHTML ="Columns = " + 10;
+
+//Setting up initial Grid on load
+resetGrid(10,10);
+
+//Start node
+
 function setStart(Row, Col){
   startNodeRow = Row;
   startNodeCol = Col;
@@ -63,24 +55,26 @@ function setStart(Row, Col){
   grid[Row][Col].start = true;
   document.getElementById(startNodeId).style.background = "red";
 }
-setStart(Math.floor(grid.length/2), (Math.floor(grid[0].length/4)));
 
 //End Node
-var endNodeRow;
-var endNodeCol;
-var endNodeId;
+
 function setEnd(Row,Col){
-  endNodeRow = Col;
-  endNodeCol=  Row;
+  endNodeRow = Row;
+  endNodeCol=  Col;
   endNodeId = "[" + Row + "," + Col + "]";
   grid[Row][Col].finish = true;
   document.getElementById(endNodeId).style.background = "green";
 }
-setEnd((Math.floor(grid.length/2)), Math.floor((grid[0].length/4) * 3));
 
-const squares = Array.from(document.querySelectorAll('#gridCell div'));
-var directions = [];
-var path = []
+//Wall Nodes
+function setWall(Row,Col){
+  let wallNodeId = "[" + Row + "," + Col + "]";
+  grid[Row][Col].isWall = true;
+  document.getElementById(wallNodeId).style.background = "purple";
+}
+
+
+//dijkstra algorithm finds the path fro start node to end node
 function dijkstra(){
   //Get Neighbors
   let currentNodeCol = startNodeCol;
@@ -109,10 +103,11 @@ function dijkstra(){
         }
         path.reverse();
         directions = directions.concat(path);
-        trigger();
+        runDirections();
         return;
       }
-      else if (grid[neighborsList[i][0]][neighborsList[i][1]].isVisited == false) {
+      else if (grid[neighborsList[i][0]][neighborsList[i][1]].isVisited == false 
+        && grid[neighborsList[i][0]][neighborsList[i][1]].isWall == false) {
           grid[neighborsList[i][0]][neighborsList[i][1]].isVisited = true;
           grid[neighborsList[i][0]][neighborsList[i][1]].dist = currentNode.dist +1;
           grid[neighborsList[i][0]][neighborsList[i][1]].prevCol = currentNode.col;
@@ -159,6 +154,8 @@ function getNeighbors(currentNode){
   }
   return nList;
 }
+
+//Animation dedicated variables
 var globalID;
 var currentIndex = 0;
 var movementLen = 0;
@@ -198,8 +195,105 @@ function runDirections(){
   },10);
 }
 
+//resetGlobal variables
+function resetGlobals(){
+  startNodeRow = -1;
+  startNodeCol = -1;
+  startNodeId = -1;
+  endNodeRow = -1;
+  endNodeCol = -1;
+  endNodeId = -1;
+  nodeSize = 1;
+  grid = [];
+  directions = [];
+  path = [];
+  currentIndex = 0;
+  movementLen = 0;
+  movmentSpeed = 1;
+
+  userPaused = false;
+}
+
+//Reset's grid size
+function resetGrid(rowSize, colSize){
+  while (canvas.firstChild) {
+    canvas.removeChild(canvas.lastChild);
+  }
+  for (let row = 0; row < rowSize; row++) {
+    grid.push([]);
+    for (let col = 0; col < colSize; col++) {
+      grid[row].push(new Node(row,col))
+    }
+  }
+  let squareWidths = (canvas.width)/colSize -1;
+  let squareHeights = (canvas.height)/rowSize;
+  for (let row = 0; row < grid.length; row++) {
+    let divRow = document.createElement("div");
+    divRow.style.overflow = "hidden";
+    divRow.style.width = canvas.width + "px";
+    for (let col = 0; col < grid[0].length; col++) {
+      let div = document.createElement("div");
+      div.style.width = squareWidths + "px";
+      div.style.height = squareHeights + "px";
+      div.style.background = "white";
+      div.style.border = "2px solid black"
+      div.style.color = "white";
+      div.style.cssFloat = "left";
+      div.className = "square";
+      div.addEventListener("click",changeNodeState);
+      div.id = "[" + row + "," + col + "]";
+      divRow.appendChild(div);
+    }
+    document.getElementById("gridCell").appendChild(divRow);
+  }
+  //start node
+  setStart(Math.floor(grid.length/2), (Math.floor(grid[0].length/4)));
+
+  //End Node
+  setEnd((Math.floor(grid.length/2)), Math.floor((grid[0].length/4) * 3));
+
+}
+
+//Takes user input of the slider and changes the size of the array
+function changeRowSize(){
+  cancelAnimationFrame(globalID);
+  let rowSize = document.getElementById('rowSlider').value
+  document.getElementById('rowLabel').innerHTML ="Rows = " + rowSize;
+  let colSize = document.getElementById('colSlider').value
+  document.getElementById('colLabel').innerHTML ="Columns = " + colSize;
+  resetGlobals();
+  resetGrid(rowSize, colSize);
+}
+
+function changeColSize(){
+  cancelAnimationFrame(globalID);
+  let rowSize = document.getElementById('rowSlider').value
+  document.getElementById('rowLabel').innerHTML ="Rows = " + rowSize;
+  let colSize = document.getElementById('colSlider').value
+  document.getElementById('colLabel').innerHTML ="Columns = " + colSize;
+  resetGlobals();
+  resetGrid(rowSize, colSize);
+}
 
 
-function trigger(){
-  runDirections();
+function changeNodeState(evt){
+ let tempRowCol = evt.currentTarget.id.replace("[","").replace("]","").split(",");
+ let selRow = Number(tempRowCol[0]);
+ let selCol = Number(tempRowCol[1]);
+ let radio = document.querySelector('input[name="interactions"]:checked').id;
+
+ if(radio == "startRadio"){
+  grid[startNodeRow][startNodeCol].start = false;
+  document.getElementById(startNodeId).style.background = "white";
+   setStart(selRow,selCol);
+ }
+ else if(radio == "endRadio"){
+  grid[endNodeRow][endNodeCol].finish = false;
+  document.getElementById(endNodeId).style.background = "white";
+  setEnd(selRow,selCol);
+ }
+ else if(radio = "wallRadio" && !((selRow == startNodeRow && selCol == startNodeCol) || (selRow == endNodeRow && selCol == endNodeCol) )){
+    setWall(selRow,selCol);
+ }
+
 }

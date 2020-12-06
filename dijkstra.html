@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200;0,300;0,400;1,200;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" type= "text/css" href="Foundation-Sites-6.6.3-CSS/assets/css/foundation.css">
 <link rel="stylesheet" type= "text/css" href="app.css">
-<link rel="stylesheet" type= "text/css" href="test.css">
+<link rel="stylesheet" type= "text/css" href="dijkstra.css">
 <link rel="stylesheet" type= "text/css" href="dropdown-Style.css">
 <link rel="stylesheet" type= "text/css" href="slider.css">
 <link rel="stylesheet" type= "text/css" href="button.css">
@@ -38,18 +38,23 @@
 
       </div>
       <div class="large-4 medium-4 small-1 cell">
-<button type="button" class="button expanded" name="button" onclick="dijkstra()">Dijkstra's Algorithm</button>
+        <button type="button" class="button expanded" name="button" onclick="dijkstra()">Dijkstra's Algorithm</button><br>
+        <input type="radio" class="radio" id="startRadio" name="interactions" checked><label for="startRadio">Change Startpoint</label><br>
+        <input type="radio" class="radio" id="endRadio" name="interactions" ><label for="endRadio">Change Endpoint</label><br>
+        <input type="radio" class="radio" id="wallRadio" name="interactions" ><label for="wallRadio">Add Walls</label><br>
+        
       </div>
       <div class="slidecontainer">
-
+        <span id= "rowLabel">Rows = 1</span>
+        <input type="range" class = "slider" id="rowSlider" min="3" max="50" value="10" onchange="changeRowSize()" ></input><br>
+        <span id= "colLabel">Columns = 1</span>
+        <input type="range" class = "slider" id="colSlider" min="3" max="50" value="10" onchange="changeColSize()" ></input>
       </div>
 
     </div>
     <div class="large-8 medium-8 cell">
-      <div class="card-info primary " id ="gridBin">
-        <div class="card-info-content flex-wrap" id = "gridCell">
+        <div class="card-info-content card-info primary flex-wrap" id = "gridCell">
 
-        </div>
       </div>
       <div class="card-info primary" id ="explainationBin">
         <div class="card-info-content" id = "explainationCell">
