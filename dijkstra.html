@@ -46,11 +46,14 @@
         </ul>
       </div>
       <div class="large-4 medium-4 small-1 cell">
-        <button type="button" class="button expanded" name="button" onclick="dijkstra()">Dijkstra's Algorithm</button><br>
-        <input type="radio" class="radio" id="startRadio" name="interactions" checked><label for="startRadio">Change Startpoint</label><br>
+        <button type="button" class="button" name="button" onclick="dijkstra()">Dijkstra's Algorithm</button>
+        <button type="button" class="button" name="button" onclick="changeRowSize()">Reset Grid</button>
+        <button type="button" class="button" name="button" onclick="gatherRandomWallSize()">Add Random Walls</button><br>
+        <input type="radio" class="radio" id="startRadio" name="interactions" checked><label for="startRadio">Change Startpoint</label>
         <input type="radio" class="radio" id="endRadio" name="interactions" ><label for="endRadio">Change Endpoint</label><br>
-        <input type="radio" class="radio" id="wallRadio" name="interactions" ><label for="wallRadio">Add Walls</label><br>
-        
+        <input type="radio" class="radio" id="wallRadio" name="interactions" ><label for="wallRadio">Add Walls</label>
+        <input type="radio" class="radio" id="deleteWallRadio" name="interactions" ><label for="deleteWallRadio">Remove Walls</label>
+
       </div>
       <div class="slidecontainer">
         <span id= "rowLabel">Rows = 1</span>

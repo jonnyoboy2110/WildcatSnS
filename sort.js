@@ -146,6 +146,7 @@ function resetLines(elements){
   for (var i = 0; i < numOfElements; i++) {
     lineArray[i] = new variableObj(Math.floor((Math.random() * (maxValueNum-minValueNum)) + minValueNum),i)
   }
+  resetAllGlobals();
   drawAllLines();
 }
 

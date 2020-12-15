@@ -14,7 +14,7 @@ function Node(row,col){
 var canvas = document.getElementById("gridCell");
 
 //document.getElementById("gridCell").style.width = document.getElementById("gridBin").style.width;
-canvas.style.flexWrap = "wrap";
+//canvas.style.flexWrap = "wrap";
 //document.getElementById("gridBin").style.height = (window.innerHeight - 80) + "px";
 document.getElementById("gridCell").style.height = (window.innerHeight - 100) + "px";
 var canWidth = document.getElementById("gridCell").offsetWidth;
@@ -33,6 +33,7 @@ var startNodeId;
 var endNodeRow;
 var endNodeCol;
 var endNodeId;
+var controlToggle = true;
 
 
 //Chosing grid dimesions based on page size
@@ -72,7 +73,12 @@ function setWall(Row,Col){
   grid[Row][Col].isWall = true;
   document.getElementById(wallNodeId).style.background = "purple";
 }
-
+//Remove Wall
+function removeWall(Row,Col){
+  let wallNodeId = "[" + Row + "," + Col + "]";
+  grid[Row][Col].isWall = false;
+  document.getElementById(wallNodeId).style.background = "white";
+}
 
 //dijkstra algorithm finds the path fro start node to end node
 function dijkstra(){
@@ -103,10 +109,11 @@ function dijkstra(){
         }
         path.reverse();
         directions = directions.concat(path);
+        disableControls();
         runDirections();
         return;
       }
-      else if (grid[neighborsList[i][0]][neighborsList[i][1]].isVisited == false 
+      else if (grid[neighborsList[i][0]][neighborsList[i][1]].isVisited == false
         && grid[neighborsList[i][0]][neighborsList[i][1]].isWall == false) {
           grid[neighborsList[i][0]][neighborsList[i][1]].isVisited = true;
           grid[neighborsList[i][0]][neighborsList[i][1]].dist = currentNode.dist +1;
@@ -210,7 +217,7 @@ function resetGlobals(){
   currentIndex = 0;
   movementLen = 0;
   movmentSpeed = 1;
-
+  controlToggle = true;;
   userPaused = false;
 }
 
@@ -251,6 +258,28 @@ function resetGrid(rowSize, colSize){
 
   //End Node
   setEnd((Math.floor(grid.length/2)), Math.floor((grid[0].length/4) * 3));
+  enableControls();
+}
+
+//Add walls randomly on the grid
+
+function randomsWalls(){
+
+let randThreshhold = Math.floor(Math.random()*grid[0].length);
+
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < grid[0].length; col++) {
+      grid[row][col].isDone = false;
+      grid[row][col].isVisited = false;
+      grid[row][col].dist = -1;
+      if (  !((row == startNodeRow && col == startNodeCol) || (row == endNodeRow && col == endNodeCol) ) ) {
+        removeWall(row,col);
+        if (Math.floor(Math.random()*grid[0].length) > randThreshhold) {
+          setWall(row,col);
+        }
+      }
+    }
+  }
 
 }
 
@@ -275,8 +304,28 @@ function changeColSize(){
   resetGrid(rowSize, colSize);
 }
 
+function gatherRandomWallSize(){
+    cancelAnimationFrame(globalID);
+    let rowSize = document.getElementById('rowSlider').value
+    document.getElementById('rowLabel').innerHTML ="Rows = " + rowSize;
+    let colSize = document.getElementById('colSlider').value
+    document.getElementById('colLabel').innerHTML ="Columns = " + colSize;
+    directions = [];
+    path = [];
+    currentIndex = 0;
+    movementLen = 0;
+    movmentSpeed = 1;
 
+    userPaused = false;
+    enableControls();
+    randomsWalls();
+}
+
+//takes selected radio button and applied selected function on node
 function changeNodeState(evt){
+  if (controlToggle == false) {
+    return;
+  }
  let tempRowCol = evt.currentTarget.id.replace("[","").replace("]","").split(",");
  let selRow = Number(tempRowCol[0]);
  let selCol = Number(tempRowCol[1]);
@@ -292,8 +341,25 @@ function changeNodeState(evt){
   document.getElementById(endNodeId).style.background = "white";
   setEnd(selRow,selCol);
  }
- else if(radio = "wallRadio" && !((selRow == startNodeRow && selCol == startNodeCol) || (selRow == endNodeRow && selCol == endNodeCol) )){
+ else if(radio == "wallRadio" && !((selRow == startNodeRow && selCol == startNodeCol) || (selRow == endNodeRow && selCol == endNodeCol) )){
     setWall(selRow,selCol);
  }
+ else if(radio == "deleteWallRadio" && !((selRow == startNodeRow && selCol == startNodeCol) || (selRow == endNodeRow && selCol == endNodeCol) )) {
+    removeWall(selRow,selCol);
+ }
+}
 
+function disableControls(){
+  let radio = document.querySelectorAll('input[name="interactions"]');
+  radio.forEach((item, i) => {
+    item.disabled = true;
+  });
+  controlToggle = false;
+}
+function enableControls(){
+  let radio = document.querySelectorAll('input[name="interactions"]');
+  radio.forEach((item, i) => {
+    item.disabled = false;
+  });
+  controlToggle = true;
 }
