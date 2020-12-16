@@ -57,7 +57,7 @@
 
       <div class="large-4 medium-4 small-1 cell">
         <button type="button" class="button" name="button" onclick="dijkstra()">Dijkstra's Algorithm</button>
-        <button type="button" class="button" name="button" onclick="changeRowSize()">Reset Grid</button>
+        <button type="button" class="button" name="button" id = "resetGrid" onclick="changeRowSize()">Reset Grid</button>
         <button type="button" class="button" name="button" onclick="gatherRandomWallSize()">Add Random Walls</button>
         <button type="button" class="button" name="button" onclick="bfs()">BFS</button><br>
         <input type="radio" class="radio" id="startRadio" name="interactions" checked><label for="startRadio">Change Startpoint</label>
@@ -74,7 +74,7 @@
       </div>
 
     </div>
-    <div class="large-8 medium-8 cell">
+    <div class="large-8 medium-8 cell" >
         <div class="card-info-content card-info primary flex-wrap" id = "gridCell">
 
       </div>

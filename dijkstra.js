@@ -91,7 +91,7 @@ function removeWall(Row,Col){
   document.getElementById(wallNodeId).innerHTML = grid[Row][Col].dist;
   
 }
-
+//Get next node in the priority Q
 function getNextInQ(q){
   let minIndex = 0;
   for(let i = 1; i< q.length; i++){
@@ -102,7 +102,7 @@ function getNextInQ(q){
   return minIndex;
 }
 
-//dijkstra algorithm finds the path fro start node to end node
+//BFS algorithm finds the path fro start node to end node
 function bfs(){
   //Get Neighbors
   let currentNodeCol = startNodeCol;
@@ -241,7 +241,7 @@ function dijkstra(){
 
 }
 
-
+//Returns list of nodes that are neighbors to currentNode
 function getNeighbors(currentNode){
   nList = [];
   if (currentNode.col > 0) {
@@ -266,6 +266,8 @@ var movementLen = 0;
 var movmentSpeed = 1;
 var framesPerSecond = 144;
 var userPaused = false;
+//Function Takes the directions array and runs through each one of those directions over a perod of time to 
+//simulate dijkstra running in real time
 function runDirections(){
   setTimeout( function(){
     if (userPaused == true) {
@@ -335,6 +337,7 @@ function resetGrid(rowSize, colSize){
   for (let row = 0; row < grid.length; row++) {
     let divRow = document.createElement("div");
     divRow.style.overflow = "hidden";
+    divRow.style.justifyContent = "center";
     divRow.style.width = canvas.width + "px";
     for (let col = 0; col < grid[0].length; col++) {
       let div = document.createElement("div");
@@ -457,6 +460,10 @@ function disableControls(){
   radio.forEach((item, i) => {
     item.disabled = true;
   });
+  Array.from(document.getElementsByTagName("button"))
+  .forEach(b => b.disabled = true)
+  document.querySelectorAll('input[type=range]').forEach(b => b.disabled = true)
+  document.getElementById("resetGrid").disabled = false;
   controlToggle = false;
 }
 function enableControls(){
@@ -464,5 +471,8 @@ function enableControls(){
   radio.forEach((item, i) => {
     item.disabled = false;
   });
+  Array.from(document.getElementsByTagName("button"))
+  .forEach(b => b.disabled = false)
+  document.querySelectorAll('input[type=range]').forEach(b => b.disabled = false)
   controlToggle = true;
 }
