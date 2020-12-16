@@ -7,6 +7,7 @@ function Node(row,col){
   this.start =  false;
   this.finish = false;
   this.dist = -1;
+  this.routeLength = -1;
   this.prevCol = -1;
   this.prevRow = -1;
 
@@ -22,6 +23,7 @@ var canHeight = document.getElementById("gridCell").offsetHeight;
 canvas.width = canWidth;
 canvas.height = canHeight;
 var nodeSize = 25;
+var MAXDISTANCE = 1000000;
 var grid = [];
 
 var directions = [];
@@ -54,7 +56,10 @@ function setStart(Row, Col){
   startNodeCol = Col;
   startNodeId = "[" + Row + "," + Col + "]";
   grid[Row][Col].start = true;
+  grid[Row][Col].dist = 0;
+  grid[Row][Col].routeLength = grid[Row][Col].dist;
   document.getElementById(startNodeId).style.background = "red";
+  document.getElementById(startNodeId).innerHTML = grid[Row][Col].dist;
 }
 
 //End Node
@@ -64,24 +69,41 @@ function setEnd(Row,Col){
   endNodeCol=  Col;
   endNodeId = "[" + Row + "," + Col + "]";
   grid[Row][Col].finish = true;
+  grid[Row][Col].dist = 0;
   document.getElementById(endNodeId).style.background = "green";
+  document.getElementById(endNodeId).innerHTML = grid[Row][Col].dist;
 }
 
 //Wall Nodes
 function setWall(Row,Col){
   let wallNodeId = "[" + Row + "," + Col + "]";
   grid[Row][Col].isWall = true;
+  grid[Row][Col].dist = MAXDISTANCE;
   document.getElementById(wallNodeId).style.background = "purple";
+  document.getElementById(wallNodeId).innerHTML = grid[Row][Col].dist;
 }
 //Remove Wall
 function removeWall(Row,Col){
   let wallNodeId = "[" + Row + "," + Col + "]";
   grid[Row][Col].isWall = false;
+  grid[Row][Col].dist = Math.floor(Math.random()*document.getElementById('colSlider').value) +1;
   document.getElementById(wallNodeId).style.background = "white";
+  document.getElementById(wallNodeId).innerHTML = grid[Row][Col].dist;
+  
+}
+
+function getNextInQ(q){
+  let minIndex = 0;
+  for(let i = 1; i< q.length; i++){
+    if(grid[q[i][0]][q[i][1]].routeLength < grid[q[minIndex][0]][q[minIndex][1]].routeLength){
+      minIndex = i;
+    }
+  }
+  return minIndex;
 }
 
 //dijkstra algorithm finds the path fro start node to end node
-function dijkstra(){
+function bfs(){
   //Get Neighbors
   let currentNodeCol = startNodeCol;
   let currentNodeRow = startNodeRow;
@@ -102,12 +124,13 @@ function dijkstra(){
         grid[neighborsList[i][0]][neighborsList[i][1]].prevRow = currentNode.row;
         currentNode = grid[neighborsList[i][0]][neighborsList[i][1]];
         currentNode.dist = grid[currentNode.prevRow][currentNode.prevCol].dist +1;
-
+        console.log(currentNode.dist);
         while (currentNode.row != startNodeRow || currentNode.col != startNodeCol) {
           path.push([currentNode.row, currentNode.col, "path"])
           currentNode = grid[currentNode.prevRow][currentNode.prevCol];
         }
         path.reverse();
+        path.push([-1,-1, "End"]);
         directions = directions.concat(path);
         disableControls();
         runDirections();
@@ -145,6 +168,80 @@ function dijkstra(){
 
 }
 
+//dijkstra algorithm finds the path fro start node to end node
+function dijkstra(){
+  //Get Neighbors
+  
+  let currentNodeCol = startNodeCol;
+  let currentNodeRow = startNodeRow;
+  let currentNode = grid[startNodeRow][startNodeCol];
+  currentNode.dist = 0;
+  currentNode.isVisited = true;
+  let q = [];
+  let minIndex;
+  q.push([startNodeRow,startNodeCol]);
+  while (q.length > 0) {
+    minIndex = getNextInQ(q);
+    currentNodeRow = q[minIndex][0];
+    currentNodeCol = q[minIndex][1];
+    currentNode = grid[q[minIndex][0]][q[minIndex][1]];
+    q.splice(minIndex,1);
+    
+    let neighborsList = getNeighbors(currentNode);
+    for (var i = 0; i < neighborsList.length; i++) {
+      if (grid[neighborsList[i][0]][neighborsList[i][1]].finish == true) {
+        grid[neighborsList[i][0]][neighborsList[i][1]].prevCol = currentNode.col;
+        grid[neighborsList[i][0]][neighborsList[i][1]].prevRow = currentNode.row;
+        currentNode = grid[neighborsList[i][0]][neighborsList[i][1]];
+        currentNode.routeLength = grid[currentNode.prevRow][currentNode.prevCol].routeLength +currentNode.dist;
+        document.getElementById("pathLength").innerHTML = currentNode.routeLength;
+        let nodeLength = 0;
+
+        while (currentNode.row != startNodeRow || currentNode.col != startNodeCol) {
+          path.push([currentNode.row, currentNode.col, "path"])
+          currentNode = grid[currentNode.prevRow][currentNode.prevCol];
+          nodeLength++;
+        }
+        document.getElementById("nodeSize").innerHTML = nodeLength;
+        path.reverse();
+        path.push([-1,-1, "End"]);
+        directions = directions.concat(path);
+        disableControls();
+        
+        runDirections();
+        
+        return;
+      }
+      else if (grid[neighborsList[i][0]][neighborsList[i][1]].isWall == false &&
+        grid[neighborsList[i][0]][neighborsList[i][1]].isDone == false) {
+        if(grid[neighborsList[i][0]][neighborsList[i][1]].isVisited == false){
+          grid[neighborsList[i][0]][neighborsList[i][1]].routeLength = currentNode.routeLength +grid[neighborsList[i][0]][neighborsList[i][1]].dist;
+          grid[neighborsList[i][0]][neighborsList[i][1]].prevCol = currentNode.col;
+          grid[neighborsList[i][0]][neighborsList[i][1]].prevRow = currentNode.row;
+          grid[neighborsList[i][0]][neighborsList[i][1]].isVisited = true;
+          directions.push([neighborsList[i][0], neighborsList[i][1], "visited"]);
+        }
+        else if(grid[neighborsList[i][0]][neighborsList[i][1]].routeLength > currentNode.routeLength + grid[neighborsList[i][0]][neighborsList[i][1]].dist){
+          grid[neighborsList[i][0]][neighborsList[i][1]].routeLength = currentNode.routeLength +grid[neighborsList[i][0]][neighborsList[i][1]].dist;
+          grid[neighborsList[i][0]][neighborsList[i][1]].prevCol = currentNode.col;
+          grid[neighborsList[i][0]][neighborsList[i][1]].prevRow = currentNode.row;
+          
+        }
+          q.push(neighborsList[i]);
+      }
+    }
+    
+    //Done with this element. Will turn it into pink
+    if(grid[currentNodeRow][currentNodeCol].isDone == false){
+      grid[currentNodeRow][currentNodeCol].isDone = true;
+      directions.push([currentNodeRow, currentNodeCol, "isDone"]);
+    }
+    //document.getElementById("[" + (currentNodeCol) + "," + (currentNodeRow) + "]").style.background = "pink";
+  }
+
+}
+
+
 function getNeighbors(currentNode){
   nList = [];
   if (currentNode.col > 0) {
@@ -175,8 +272,8 @@ function runDirections(){
       cancelAnimationFrame(globalID);
       return;
     }
-    if (currentIndex == directions.length) {
-
+    if (currentIndex == directions.length || directions[currentIndex][2] == "End") {
+      resetGlobals();
       cancelAnimationFrame(globalID);
       return;
     }
@@ -230,6 +327,7 @@ function resetGrid(rowSize, colSize){
     grid.push([]);
     for (let col = 0; col < colSize; col++) {
       grid[row].push(new Node(row,col))
+      grid[row][col].dist =  Math.floor(Math.random()*colSize) +1;
     }
   }
   let squareWidths = (canvas.width)/colSize -1;
@@ -244,11 +342,12 @@ function resetGrid(rowSize, colSize){
       div.style.height = squareHeights + "px";
       div.style.background = "white";
       div.style.border = "2px solid black"
-      div.style.color = "white";
+      div.style.color = "black";
       div.style.cssFloat = "left";
       div.className = "square";
       div.addEventListener("click",changeNodeState);
       div.id = "[" + row + "," + col + "]";
+      div.innerHTML = grid[row][col].dist;
       divRow.appendChild(div);
     }
     document.getElementById("gridCell").appendChild(divRow);
@@ -333,12 +432,16 @@ function changeNodeState(evt){
 
  if(radio == "startRadio"){
   grid[startNodeRow][startNodeCol].start = false;
+  grid[startNodeRow][startNodeCol].dist = Math.floor(Math.random()*document.getElementById('colSlider').value) +1;
   document.getElementById(startNodeId).style.background = "white";
-   setStart(selRow,selCol);
+  document.getElementById(startNodeId).innerHTML =  grid[startNodeRow][startNodeCol].dist;
+  setStart(selRow,selCol);
  }
  else if(radio == "endRadio"){
   grid[endNodeRow][endNodeCol].finish = false;
+  grid[endNodeRow][endNodeCol].dist = Math.floor(Math.random()*document.getElementById('colSlider').value) +1;
   document.getElementById(endNodeId).style.background = "white";
+  document.getElementById(endNodeId).innerHTML =  grid[endNodeRow][endNodeCol].dist;
   setEnd(selRow,selCol);
  }
  else if(radio == "wallRadio" && !((selRow == startNodeRow && selCol == startNodeCol) || (selRow == endNodeRow && selCol == endNodeCol) )){

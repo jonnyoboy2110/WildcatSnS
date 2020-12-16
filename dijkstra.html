@@ -34,21 +34,32 @@
 <div class="grid-container">
   <div class="grid-x grid-padding-x">
     <div class="large-4 medium-4 cell ">
-      <div class="card-info primary">
-        <p class = "firstLine">Color Legend</p>
-         <ul class = "legend">
-          <li ><span style="background-color: red;" ></span> Start Point</li>
-          <li ><span style="background-color:green" ></span>End Point</li>
-          <li ><span style="background-color:purple ;color: white;"></span>Wall</li>
-          <li ><span style="background-color:yellow" ></span>Path</li>
-          <li ><span style="background-color:blue; color: white;" ></span>Visited Node</li>
-          <li ><span style="background-color:pink"></span>Node Fully Checked</li>
-        </ul>
+      <div class="card-info primary grid-x grid-padding-x">
+        <div class="large-6 medium-6 cell ">
+          <p class = "firstLine">Color Legend</p>
+          <ul class = "legend">
+            <li ><span style="background-color: red" ></span> Start Point</li>
+            <li ><span style="background-color:green" ></span>End Point</li>
+            <li ><span style="background-color:purple"></span>Wall</li>
+            <li ><span style="background-color:yellow" ></span>Path</li>
+            <li ><span style="background-color:blue" ></span>Visited Node</li>
+            <li ><span style="background-color:pink"></span>Node Fully Checked</li>
+          </ul>
+        </div>
+        <div class="large-6 medium-6 cell ">
+          <p class = "firstLine">Path Info</p>
+          <ul class = "pathStats">
+          <li >Path Length: <span id = "pathLength"></span></li>
+            <li >Num of Nodes: <span id = "nodeSize"></span></li>
+          </ul>
+        </div>
       </div>
+
       <div class="large-4 medium-4 small-1 cell">
         <button type="button" class="button" name="button" onclick="dijkstra()">Dijkstra's Algorithm</button>
         <button type="button" class="button" name="button" onclick="changeRowSize()">Reset Grid</button>
-        <button type="button" class="button" name="button" onclick="gatherRandomWallSize()">Add Random Walls</button><br>
+        <button type="button" class="button" name="button" onclick="gatherRandomWallSize()">Add Random Walls</button>
+        <button type="button" class="button" name="button" onclick="bfs()">BFS</button><br>
         <input type="radio" class="radio" id="startRadio" name="interactions" checked><label for="startRadio">Change Startpoint</label>
         <input type="radio" class="radio" id="endRadio" name="interactions" ><label for="endRadio">Change Endpoint</label><br>
         <input type="radio" class="radio" id="wallRadio" name="interactions" ><label for="wallRadio">Add Walls</label>
@@ -57,9 +68,9 @@
       </div>
       <div class="slidecontainer">
         <span id= "rowLabel">Rows = 1</span>
-        <input type="range" class = "slider" id="rowSlider" min="3" max="50" value="10" onchange="changeRowSize()" ></input><br>
+        <input type="range" class = "slider" id="rowSlider" min="3" max="30" value="10" onchange="changeRowSize()" ></input><br>
         <span id= "colLabel">Columns = 1</span>
-        <input type="range" class = "slider" id="colSlider" min="3" max="50" value="10" onchange="changeColSize()" ></input>
+        <input type="range" class = "slider" id="colSlider" min="3" max="30" value="10" onchange="changeColSize()" ></input>
       </div>
 
     </div>
