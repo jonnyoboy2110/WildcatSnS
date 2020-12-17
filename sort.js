@@ -22,6 +22,9 @@ var lineBuffer = 5; // space between elements
 var numOfElements = Math.floor(canWidth/(lineWidths-2)); // inital number of Value
 var maxValueNum = 450; // inital max Value
 var minValueNum = 50; // inital min Value
+document.getElementById("sizeText").innerHTML = "Size = " + numOfElements;
+document.getElementById("sizeSlider").value = numOfElements;
+
 
 var lineArray = []; // array that holds the values
 //Mouse trackiing functions TESTING
